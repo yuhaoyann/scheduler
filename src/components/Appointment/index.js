@@ -7,6 +7,7 @@ import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 import useVisualMode from "hooks/useVisualMode";
 
 
@@ -16,6 +17,8 @@ import useVisualMode from "hooks/useVisualMode";
   const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment (props) {
   
@@ -25,23 +28,25 @@ export default function Appointment (props) {
 
   function save (name, interviewer) {
     if (name && interviewer) {
-      transition(SAVING);
-  
       const interview = {
         student: name,
         interviewer
       }
+      
+      transition(SAVING);
   
       props.bookInterview(props.id, interview)
-      .then(() => transition(SHOW));
+      .then(() => transition(SHOW))
+      .catch(err => transition(ERROR_SAVE, true))
     }
   }
 
   function confirmDeleting () {
-    transition(DELETING);
+    transition(DELETING, true);
     
     props.cancelInterview(props.id)
     .then(() => transition(EMPTY))
+    .catch(err => transition(ERROR_DELETE, true))
   }
   
   return (
@@ -61,7 +66,7 @@ export default function Appointment (props) {
           interviewers={props.interviewers}
           interviewer={props.interview && props.interview.interviewer.id}
           student={props.interview && props.interview.student}
-          onCancel={() => back()}
+          onCancel={back}
           onSave={save}
         />
       )}
@@ -70,9 +75,21 @@ export default function Appointment (props) {
       {mode === CONFIRM && (
         <Confirm
           message={"Are you sure you would like to delete?"}
-          onCancel={() => back()}
+          onCancel={back}
           onConfirm={confirmDeleting}
         />)}
+      {mode === ERROR_SAVE && 
+        <Error 
+          message="Create appointment failed, error connecting to server"
+          onClose={back}
+        />
+      }
+      {mode === ERROR_DELETE && 
+        <Error 
+          message="Delete appointment failed, error connecting to server"
+          onClose={back}
+        />
+      }
     </article>
   )
 }
