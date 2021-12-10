@@ -37,7 +37,15 @@ export default function useApplicationData () {
       ]).then((all) => {
         setState(prev => ({
           ...prev,
-          days: all[0].data,
+          days: all[0].data.map((day) => {
+            day.spots = 0;
+            for (let appointment of day.appointments) {
+              if (!all[1].data[appointment].interview) {
+                day.spots ++;
+              }
+            }
+            return day;
+          }),
           appointments: all[1].data,
           interviewers: all[2].data,
         }))
@@ -55,7 +63,15 @@ export default function useApplicationData () {
       ]).then((all) => {
         setState(prev => ({
           ...prev,
-          days: all[0].data,
+          days: all[0].data.map((day) => {
+            day.spots = 0;
+            for (let appointment of day.appointments) {
+              if (!all[1].data[appointment].interview) {
+                day.spots ++;
+              }
+            }
+            return day;
+          }),
           appointments: all[1].data,
           interviewers: all[2].data,
         }))
