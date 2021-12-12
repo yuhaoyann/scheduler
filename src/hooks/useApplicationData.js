@@ -4,6 +4,7 @@ import axios from "axios";
 const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
+const UPDATE_SPOTS = "UPDATE_SPOTS";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -22,8 +23,19 @@ function reducer(state, action) {
     case SET_INTERVIEW: {
       return {
         ...state,
+        appointments: {
+          ...state.appointments,
+          [action.id]: {
+            ...state.appointments[action.id],
+            interview: action.interview,
+          }
+        }
+      }
+    }
+    case UPDATE_SPOTS: {
+      return {
+        ...state,
         days: action.days,
-        appointments: action.appointments,    
       }
     }
     default:
@@ -44,12 +56,10 @@ export default function useApplicationData () {
   
   useEffect(() => {
     const webSocket = new WebSocket("ws://localhost:8001");
-    webSocket.onopen = function (event) {
-      webSocket.send("ping");
-    };
     webSocket.onmessage = function (event) {
       console.log(event.data);
     }
+
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
@@ -74,13 +84,16 @@ export default function useApplicationData () {
     .then(
       Promise.all([
         axios.get("/api/days"),
-        axios.get("/api/appointments"),
       ]).then((all) => {
         dispatch({
-          type: SET_INTERVIEW,
+          type: UPDATE_SPOTS,
           days: all[0].data,
-          appointments: all[1].data,
-        })
+        });
+        dispatch({
+          type: SET_INTERVIEW,
+          id,
+          interview,
+        });
       })
     )
   }
@@ -90,13 +103,16 @@ export default function useApplicationData () {
     .then(
       Promise.all([
         axios.get("/api/days"),
-        axios.get("/api/appointments"),
       ]).then((all) => {
         dispatch({
-          type: SET_INTERVIEW,
+          type: UPDATE_SPOTS,
           days: all[0].data,
-          appointments: all[1].data,
-        })
+        });
+        dispatch({
+          type: SET_INTERVIEW,
+          id,
+          interview: null,
+        });
       })
     )
   }
