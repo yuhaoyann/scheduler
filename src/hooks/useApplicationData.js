@@ -57,7 +57,17 @@ export default function useApplicationData () {
   useEffect(() => {
     const webSocket = new WebSocket("ws://localhost:8001");
     webSocket.onmessage = function (event) {
-      console.log(event.data);
+      dispatch({
+        ...JSON.parse(event.data)
+      })
+      Promise.all([
+        axios.get("/api/days"),
+      ]).then((all) => {
+        dispatch({
+          type: UPDATE_SPOTS,
+          days: all[0].data,
+        });
+      })
     }
 
     Promise.all([
@@ -81,40 +91,10 @@ export default function useApplicationData () {
   
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview })
-    .then(
-      Promise.all([
-        axios.get("/api/days"),
-      ]).then((all) => {
-        dispatch({
-          type: UPDATE_SPOTS,
-          days: all[0].data,
-        });
-        dispatch({
-          type: SET_INTERVIEW,
-          id,
-          interview,
-        });
-      })
-    )
   }
   
   function cancelInterview(id) {
     return axios.delete(`/api/appointments/${id}`)
-    .then(
-      Promise.all([
-        axios.get("/api/days"),
-      ]).then((all) => {
-        dispatch({
-          type: UPDATE_SPOTS,
-          days: all[0].data,
-        });
-        dispatch({
-          type: SET_INTERVIEW,
-          id,
-          interview: null,
-        });
-      })
-    )
   }
 
   return { state, setDay, bookInterview, cancelInterview };
