@@ -25,14 +25,14 @@ Installed `WebSocket Server` function so that when one user update the page, it 
 
 ## Final Product
 
-main page
-!["main page"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/1.main_page.png)<br />
-search property
-!["create interview"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/2.create_interview.png)<br />
-create property
-!["show interviews"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/3.show_page.png)<br />
-my reservation
-!["delete interview"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/4.delete_interviews.png)
+- main page
+  !["main page"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/1.main_page.png)<br />
+- create interview
+  !["create interview"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/2.create_interview.png)<br />
+- show interviews
+  !["show interviews"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/3.show_page.png)<br />
+- delete interview
+  !["delete interview"](https://github.com/yuhaoyann/scheduler/blob/master/public/docs/4.delete_interviews.png)
 
 ## Dependencies
 
