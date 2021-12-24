@@ -61,14 +61,6 @@ export default function useApplicationData () {
       dispatch({
         ...JSON.parse(event.data)
       })
-      Promise.all([
-        axios.get("/api/days"),
-      ]).then((all) => {
-        dispatch({
-          type: UPDATE_SPOTS,
-          days: all[0].data,
-        });
-      })
     }
 
     Promise.all([
@@ -92,10 +84,36 @@ export default function useApplicationData () {
   
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview })
+    .then(() => {
+      let days = state.days;
+      days.map(day => {
+        if (day.appointments.includes(id)) {
+          day.spots --;
+        }
+        return day;
+      })
+      dispatch({
+        type: UPDATE_SPOTS,
+        days
+      })
+    })
   }
   
   function cancelInterview(id) {
     return axios.delete(`/api/appointments/${id}`)
+    .then(() => {
+      let days = state.days;
+      days.map(day => {
+        if (day.appointments.includes(id)) {
+          day.spots ++;
+        }
+        return day;
+      })
+      dispatch({
+        type: UPDATE_SPOTS,
+        days
+      })
+    })
   }
 
   return { state, setDay, bookInterview, cancelInterview };
