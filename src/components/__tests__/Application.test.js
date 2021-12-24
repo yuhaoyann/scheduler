@@ -46,14 +46,15 @@ describe("Application", () => {
     fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
     
     fireEvent.click(getByText(appointment, "Save"));
-    debug();
     expect(getByText(appointment, "SAVING")).toBeInTheDocument();
+    // used websocket so the test is not working
     // await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
-    await waitForElementToBeRemoved(() => getByText(appointment, "SAVING"));
     // expect(getByText(appointment, "Lydia Miller-Jones")).toBeInTheDocument();
+    await waitForElementToBeRemoved(() => getByText(appointment, "SAVING"));
     const day = getAllByTestId(container, "day").find(day =>
         queryByText(day, "Monday")
       );
+    expect(getByText(day, "no spots remaining")).toBeInTheDocument();
   });
 
 })
