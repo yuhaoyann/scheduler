@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import axios from "axios";
+import reducer from "reducers/application";
 
 import {
   render,
@@ -152,4 +153,11 @@ describe("Application", () => {
     expect(getByText(day, "1 spot remaining")).toBeInTheDocument();  
   });
 
+  describe("Application Reducer", () => {
+    it("thows an error with an unsupported type", () => {
+      expect(() => reducer({}, { type: null })).toThrowError(
+        /tried to reduce with unsupported action type/i
+      );
+    });
+  });
 })
