@@ -3,6 +3,7 @@ import axios from "axios";
 import reducer, {
   SET_DAY,
   SET_APPLICATION_DATA,
+  // eslint-disable-next-line no-unused-vars
   SET_INTERVIEW,
   UPDATE_SPOTS
 } from "reducers/application";
