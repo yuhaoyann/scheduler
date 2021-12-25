@@ -82,20 +82,22 @@ export default function useApplicationData () {
     day
   });
   
-  function bookInterview(id, interview) {
+  function bookInterview(id, interview, add = true) {
     return axios.put(`/api/appointments/${id}`, { interview })
     .then(() => {
-      let days = state.days;
-      days.map(day => {
-        if (day.appointments.includes(id)) {
-          day.spots --;
-        }
-        return day;
-      })
-      dispatch({
-        type: UPDATE_SPOTS,
-        days
-      })
+      if (add) {        
+        let days = state.days;
+        days.map(day => {
+          if (day.appointments.includes(id)) {
+            day.spots --;
+          }
+          return day;
+        })
+        dispatch({
+          type: UPDATE_SPOTS,
+          days
+        })
+      }
     })
   }
   

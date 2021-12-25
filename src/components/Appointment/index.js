@@ -17,6 +17,7 @@ import useVisualMode from "hooks/useVisualMode";
   const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
+  const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
 
@@ -31,7 +32,7 @@ export default function Appointment (props) {
     props.interview === null && mode === SHOW && transition(EMPTY);
    }, [transition, mode, props.interview]);
 
-  function save (name, interviewer) {
+  function add (name, interviewer) {
     if (name && interviewer) {
       const interview = {
         student: name,
@@ -40,7 +41,22 @@ export default function Appointment (props) {
       
       transition(SAVING);
   
-      props.bookInterview(props.id, interview)
+      props.bookInterview(props.id, interview, true)
+      .then(() => transition(SHOW))
+      .catch(err => transition(ERROR_SAVE, true))
+    }
+  }
+
+  function edit (name, interviewer) {
+    if (name && interviewer) {
+      const interview = {
+        student: name,
+        interviewer
+      }
+      
+      transition(SAVING);
+  
+      props.bookInterview(props.id, interview, false)
       .then(() => transition(SHOW))
       .catch(err => transition(ERROR_SAVE, true))
     }
@@ -63,7 +79,7 @@ export default function Appointment (props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={() => transition(CONFIRM)}
-          onEdit={() => transition(CREATE)}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && (
@@ -72,7 +88,16 @@ export default function Appointment (props) {
           interviewer={props.interview && props.interview.interviewer.id}
           student={props.interview && props.interview.student}
           onCancel={back}
-          onSave={save}
+          onSave={add}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          interviewer={props.interview && props.interview.interviewer.id}
+          student={props.interview && props.interview.student}
+          onCancel={back}
+          onSave={edit}
         />
       )}
       {mode === SAVING && <Status message={SAVING} />}
