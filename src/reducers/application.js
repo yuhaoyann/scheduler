@@ -5,11 +5,11 @@ const UPDATE_SPOTS = "UPDATE_SPOTS";
 
 export default function reducer(state, action) {
   switch (action.type) {
-    case SET_DAY:
-      return {
-        ...state,
-        day: action.day 
-      }
+    // case SET_DAY:
+    //   return {
+    //     ...state,
+    //     day: action.day 
+    //   }
     case SET_APPLICATION_DATA:
       return {
         ...state,
